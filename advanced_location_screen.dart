@@ -5,6 +5,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:mlodin90/common_widgets/custom_appbar.dart';
+import 'package:mlodin90/constants/app_constants.dart';
+import 'package:mlodin90/helpers/di.dart';
 import 'package:mlodin90/routes/app_routes.dart';
 
 class LocationPickerScreen extends StatefulWidget {
@@ -109,7 +111,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
       selectedLocation = currentLatLng;
     });
 
-    await getAddressFromLatLng(currentLatLng); 
+    await getAddressFromLatLng(currentLatLng);
     animateToLocation(currentLatLng);
   }
 
@@ -232,7 +234,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
             ),
           ),
 
-          // Custom Control Buttons (Current Location + Go To)
+          
           Positioned(
             bottom: 100,
             right: 20,
@@ -250,12 +252,15 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                   icon: Icons.navigation,
                   label: "Go To",
                   onTap: () {
-                    if (selectedLocation != null) {
+                    if (locationName.isNotEmpty &&
+                        locationName != "Fetching location..." &&
+                        locationName != "Location not found") {
                       log(locationName);
+                      appData.write(kKeyLocation, locationName);
 
                       Get.toNamed(AppRoutes.navigationScreen);
                     } else {
-                      log("No location selected");
+                      log("No location selected yet");
                     }
                   },
                   color: Colors.green,
